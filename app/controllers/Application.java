@@ -11,4 +11,11 @@ public class Application extends Controller {
         return ok(index.render("HELLO, WORLD"));
     }
 
+    public static Result addTask() {
+    	play.data.Form<models.Task> form = play.data.Form.form(models.Task.class).bindFromRequest();
+    	models.Task task = form.get();
+    	task.save();
+    	return redirect(routes.Application.index());
+    }
+
 }
