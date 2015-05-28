@@ -5,6 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index()
 GET		/foo						controllers.Application.index()
+GET		/tasks						controllers.Application.getTasks()
 
 POST	/task						controllers.Application.addTask()
 

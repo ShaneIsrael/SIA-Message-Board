@@ -1,9 +1,10 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
-import views.html.*;
+import java.util.List;
+import views.html.index;
 
 public class Application extends Controller {
 
@@ -18,4 +19,8 @@ public class Application extends Controller {
     	return redirect(routes.Application.index());
     }
 
+    public static Result getTasks() {
+    	List<models.Task> tasks = new play.db.ebean.Model.Finder<>(String.class,  models.Task.class).all();
+    	return ok(play.libs.Json.toJson(tasks));
+    }
 }
