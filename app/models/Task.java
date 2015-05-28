@@ -5,12 +5,10 @@ import javax.persistence.Id;
 import play.db.ebean.Model;
 
 @Entity
-public class Task {
+public class Task extends Model {
 
 	@Id
 	public String id;
 
 	public String contents;
-
-	public void save() {}
 }

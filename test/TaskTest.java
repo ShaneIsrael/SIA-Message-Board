@@ -14,7 +14,6 @@ public class TaskTest {
 			public void run() {
 				Task task = new Task();
 				task.contents = "Write a test";
-				task.id = "something";
 				task.save();
 				assertThat(task.id).isNotNull();
 			}
