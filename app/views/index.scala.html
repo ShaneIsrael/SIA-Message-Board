@@ -3,8 +3,8 @@
 @main("Welcome to Play") {
 
     @message.toUpperCase
-
     @helper.form(action = routes.Application.addTask) {
+    	<ul id="tasks"></ul>
     	<input name="contents"/>
     	<input type="submit"/>
     }
