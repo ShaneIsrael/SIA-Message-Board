@@ -14,9 +14,14 @@ public class Application extends Controller {
 
     public static Result addTask() {
     	play.data.Form<models.Task> form = play.data.Form.form(models.Task.class).bindFromRequest();
-    	models.Task task = form.get();
-    	task.save();
-    	return redirect(routes.Application.index());
+    	if (form.hasErrors()) {
+    		return badRequest(index.render("You Failed! Noob!", form));
+    	}
+    	else {
+    		models.Task task = form.get();
+    		task.save();
+    		return redirect(routes.Application.index());
+    	}
     }
 
     public static Result getTasks() {
