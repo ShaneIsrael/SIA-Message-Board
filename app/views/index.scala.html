@@ -1,7 +1,7 @@
 @(message: String, taskForm: Form[Message])
 @implicitFieldConstructor = @{ helper.FieldConstructor(twitterBootstrapInput.render) }
 
-@main("Welcome to Play 2.0") {
+@main("Anonymous Message Board") {
 
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
@@ -12,6 +12,8 @@
     </div>
 
     <div class="container">
+    	<h3>Anonymous Message Board</h3>
+    	<span class="label label-info">Text !register to receive new replies to your mobile phone!</span>
         <ul id="messages"></ul>
 
   @helper.form(action = routes.Application.addMessage(), 'class -> "well form-horizontal") {
