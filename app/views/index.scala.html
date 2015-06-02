@@ -1,4 +1,4 @@
-@(message: String, taskForm: Form[Task])
+@(message: String, taskForm: Form[Message])
 @implicitFieldConstructor = @{ helper.FieldConstructor(twitterBootstrapInput.render) }
 
 @main("Welcome to Play 2.0") {
@@ -6,16 +6,16 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a id="titleLink" class="brand" href="/">@message.toUpperCase</a>
+                <a id="titleLink" class="brand" href="/">@message</a>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <ul id="tasks"></ul>
+        <ul id="messages"></ul>
 
-        @helper.form(action = routes.Application.addTask(), 'class -> "well form-horizontal") {
-            @helper.inputText(taskForm("contents"), '_label -> "Contents")
+  @helper.form(action = routes.Application.addMessage(), 'class -> "well form-horizontal") {
+            @helper.inputText(taskForm("contents"), '_label -> "Write a message:")
             <div class="controls">
                 <input type="submit" class="btn btn-primary"/>
             </div>

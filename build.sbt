@@ -1,20 +1,23 @@
-name := """play2torial"""
+name := "play2torial"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
-
-scalaVersion := "2.11.1"
-
 libraryDependencies ++= Seq(
-  javaJdbc,
-  javaEbean,
-  cache,
-  javaWs
+  javaCore,
+  javaWs % "test",
+  "org.webjars" % "bootstrap" % "2.1.1",
+  "com.h2database" % "h2" % "1.4.181",
+  "org.slf4j" % "slf4j-api" % "1.7.12",
+  "org.springframework" % "spring-context" % "4.1.1.RELEASE",
+  "org.springframework" % "spring-orm" % "4.1.1.RELEASE",
+  "org.springframework" % "spring-jdbc" % "4.1.1.RELEASE",
+  "org.springframework" % "spring-tx" % "4.1.1.RELEASE",
+  "org.springframework" % "spring-expression" % "4.1.1.RELEASE",
+  "org.springframework" % "spring-aop" % "4.1.1.RELEASE",
+  "org.springframework" % "spring-test" % "4.1.1.RELEASE" % "test",
+  "org.hibernate" % "hibernate-entitymanager" % "4.3.6.Final",
+  "mysql" % "mysql-connector-java" % "5.1.35",
+  "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5"
 )
 
-libraryDependencies += "org.webjars" % "jquery" % "1.11.2"
-
-libraryDependencies += "org.webjars" % "bootstrap" % "2.1.1"
-
-libraryDependencies += "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+lazy val root = (project in file(".")).enablePlugins(PlayJava)

@@ -1,4 +1,4 @@
 $ ->
-  $.get "/tasks", (data) ->
-    $.each data, (index, task) ->
-      $("#tasks").append $("<li>").text task.contents
+  $.get "/messages", (data) ->
+    $.each data, (index, message) ->
+      $("#messages").append $("<ul>").text message.contents
