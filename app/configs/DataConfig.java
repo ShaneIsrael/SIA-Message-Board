@@ -34,7 +34,7 @@ public class DataConfig {
         entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setJpaPropertyMap(new HashMap<String, String>(){{
-            put("hibernate.hbm2ddl.auto", "create-update"); //validate
+            put("hibernate.hbm2ddl.auto", "update"); //validate
         }});
         entityManagerFactory.afterPropertiesSet();
         return entityManagerFactory.getObject();
