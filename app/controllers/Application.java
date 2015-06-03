@@ -1,5 +1,7 @@
 package controllers;
 
+import models.Register;
+
 import services.MessageService;
 
 import play.Play;
@@ -152,29 +154,43 @@ public class Application {
 				reply = "You are already registered!";
 			}
 
-			try {
-				Logger.info("Sending register success reply!");
-				TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID,
-						AUTH_TOKEN);
-
-				Account account = client.getAccount();
-				MessageFactory messageFactory = account.getMessageFactory();
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("To", number));
-				params.add(new BasicNameValuePair("From", Play.application()
-						.configuration().getString("sms.default")));
-				params.add(new BasicNameValuePair("Body", reply));
-				Message sms = messageFactory.create(params);
-			} catch (TwilioRestException tre) {
-				tre.printStackTrace();
-				Logger.debug("Failed to send message to registered user!");
-			}
+			Logger.info("Sending register success reply!");
+			sendReply(number, reply);
 
 			return true;
 		}
 		else if (body.toLowerCase().equals("!unregister")) {
+			models.Register user = new models.Register();
+			user.phoneNumber = number;
+			if (msgService.unregisterNumber(user)) {
+				Logger.info("A user has unregistered.");
+				sendReply(number, "You have been unregistered, you will no longer receive messages.");
+			}
+			else {
+				Logger.debug("A user could not be unregistered, are they in the database?");
+			}
+			return true;
 		}
 		return false;
+	}
+
+	private void sendReply(String number, String msg) {
+		try {
+			TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID,
+					AUTH_TOKEN);
+
+			Account account = client.getAccount();
+			MessageFactory messageFactory = account.getMessageFactory();
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("To", number));
+			params.add(new BasicNameValuePair("From", Play.application()
+					.configuration().getString("sms.default")));
+			params.add(new BasicNameValuePair("Body", msg));
+			Message sms = messageFactory.create(params);
+		} catch (TwilioRestException tre) {
+			tre.printStackTrace();
+			Logger.debug("Failed to send message to user!");
+		}
 	}
 
 }

@@ -43,6 +43,16 @@ public class MessageServiceImpl implements MessageService {
 		return false;
 	}
 
+	public boolean unregisterNumber(Register rgstr) {
+		javax.persistence.Query query = em.createQuery("DELETE FROM Register WHERE phoneNumber=:number");
+		query.setParameter("number", rgstr.phoneNumber);
+		int result = query.executeUpdate();
+		if (result > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	public List<Message> getMessages() {
 		CriteriaQuery<Message> c = em.getCriteriaBuilder().createQuery(Message.class);
 		c.from(Message.class);
