@@ -50,7 +50,7 @@ public class Application {
 
 	public Result index() {
 		String smsNumber = Play.application().configuration()
-				.getString("sms.default");
+				.getString("sms.default.number");
 		return play.mvc.Controller.ok(index.render("Text " + smsNumber
 				+ " to add a message!",
 				play.data.Form.form(models.Message.class)));
