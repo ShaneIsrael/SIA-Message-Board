@@ -41,7 +41,7 @@ The SMS Interactive Anonymous Message Board is a very basic chat client that all
 
         $ sbt ~run
 
-Open your browser and go to `http://localhost:9000`. Play Framework may pop-up and tell you to apply a script, do it.
+Since this is the first run with sbt, it will take a few minutes to build as it downloads all the required dependencies. Once it's finished you can open your browser and go to `http://localhost:9000`. Play Framework may pop-up and tell you to apply a script, do it.
 
 ### Import into eclipse
 ---
