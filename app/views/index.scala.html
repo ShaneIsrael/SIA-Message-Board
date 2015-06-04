@@ -3,25 +3,29 @@
 
 @main("Anonymous Message Board") {
 
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a id="titleLink" class="brand" href="/">@message</a>
-            </div>
-        </div>
+
+    <div class="container-fluid">
+        <div class="page-header well well-sm">
+        	<h1>Anonymous Message Board</h1>
+    	</div>
     </div>
 
     <div class="container">
-    	<h3>Anonymous Message Board</h3>
-    	<span class="label label-info">Text !register to receive new replies to your mobile phone!</span>
+    	<h3>@message</h3>
+    	<div id="hints">
+	    	<div class="alert alert-info" role="alert">Text !register to receive new replies to your mobile phone!<br>Text !unregister to stop receiving messages.</div>
+	    </div>
         <ul id="messages"></ul>
-
-  @helper.form(action = routes.Application.addMessage(), 'class -> "well form-horizontal") {
-            @helper.inputText(taskForm("contents"), '_label -> "Write a message:")
+	<div id="form">
+  		@helper.form(action = routes.Application.addMessage(),'id -> "submitForm", 'class -> "well form-horizontal") {
+            @helper.inputText(taskForm("contents"), '_label -> "Write a message...")
             <div class="controls">
-                <input type="submit" class="btn btn-primary"/>
+                <button type="submit" class="btn btn-default btn-lg" aria-label="Center Align">
+                	<span class="glyphicon glyphicon-pencil" aria-hidden="true"> Submit</span>
+                </button>
             </div>
         }
+    </div>
     </div>
 
 }

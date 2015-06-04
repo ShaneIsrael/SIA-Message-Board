@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq(
   javaCore,
   javaWs % "test",
-  "org.webjars" % "bootstrap" % "2.1.1",
+  "org.webjars" % "bootstrap" % "3.3.4",
   "com.h2database" % "h2" % "1.4.181",
   "org.slf4j" % "slf4j-api" % "1.7.12",
   "org.springframework" % "spring-context" % "4.1.1.RELEASE",

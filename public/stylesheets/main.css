@@ -1,6 +1,3 @@
-body {
-    padding-top: 50px;
-}
 
 ul {
 	padding-top: 4px;
@@ -9,10 +6,14 @@ ul {
 
 }
 
+.controls {
+	padding-top: 5px;
+}
+
 h3 {
 	padding-left: 50px;
 }
 
-span {
+#hints, #form, .well {
 	padding-left: 50px;
 }

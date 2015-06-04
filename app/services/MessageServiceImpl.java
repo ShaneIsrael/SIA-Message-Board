@@ -59,7 +59,9 @@ public class MessageServiceImpl implements MessageService {
 		TypedQuery<Message> query = em.createQuery(c);
 		int maxResultsWanted = Play.application().configuration().getInt("messages.max");
 		int maxDBResults = query.getResultList().size();
-		query.setFirstResult(maxDBResults - maxResultsWanted);
+		if (maxDBResults > maxResultsWanted) {
+			query.setFirstResult(maxDBResults - maxResultsWanted);
+		}
 		return query.getResultList();
 	}
 

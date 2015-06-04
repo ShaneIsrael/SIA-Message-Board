@@ -42,6 +42,7 @@ public class Application {
 	static {
 		System.setProperty("logback.configurationFile", "/app/conf/logger.xml");
 	}
+
 	static Logger Logger = LoggerFactory.getLogger(Application.class);
 
 	@Autowired
@@ -60,6 +61,7 @@ public class Application {
 		Form<models.Message> form = Form.form(models.Message.class)
 				.bindFromRequest();
 		if (form.hasErrors()) {
+			Logger.info("Form has an error");
 			return play.mvc.Controller.badRequest(index.render(
 					"You Failed! Noob!", form));
 		} else {
@@ -158,15 +160,14 @@ public class Application {
 			sendReply(number, reply);
 
 			return true;
-		}
-		else if (body.toLowerCase().equals("!unregister")) {
+		} else if (body.toLowerCase().equals("!unregister")) {
 			models.Register user = new models.Register();
 			user.phoneNumber = number;
 			if (msgService.unregisterNumber(user)) {
 				Logger.info("A user has unregistered.");
-				sendReply(number, "You have been unregistered, you will no longer receive messages.");
-			}
-			else {
+				sendReply(number,
+						"You have been unregistered, you will no longer receive messages.");
+			} else {
 				Logger.debug("A user could not be unregistered, are they in the database?");
 			}
 			return true;
