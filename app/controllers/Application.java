@@ -69,6 +69,10 @@ public class Application {
 			message.contents = "["
 					+ new SimpleDateFormat("HH:mm").format(new Date()) + "] "
 					+ message.contents;
+
+			if (message.contents.length() > 255) {
+				message.contents = message.contents.substring(0, 255);
+			}
 			msgService.addMessage(message);
 			notifyRegistered(null);
 			return play.mvc.Controller.redirect(controllers.routes.Application

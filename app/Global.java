@@ -20,7 +20,7 @@ public class Global extends GlobalSettings {
 
     @Override
     public <A> A getControllerInstance(Class<A> clazz) {
-        return ctx.getBean(clazz);
-    }
+		return ctx.getBean(clazz);
+	}
 
 }
