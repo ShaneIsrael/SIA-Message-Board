@@ -30,7 +30,7 @@ import java.util.List;
 
 
 @org.springframework.stereotype.Controller
-public class Application {
+public class Application extends play.mvc.Controller {
 
 	private static final String ACCOUNT_SID = Play.application().configuration()
 			.getString("account.sid");
@@ -49,7 +49,7 @@ public class Application {
 	public Result index() {
 		String smsNumber = Play.application().configuration()
 				.getString("sms.default.number");
-		return play.mvc.Controller.ok(index.render("Text " + smsNumber
+		return ok(index.render("Text " + smsNumber
 				+ " to add a message!",
 				play.data.Form.form(models.Message.class)));
 	}
@@ -60,7 +60,7 @@ public class Application {
 				.bindFromRequest();
 		if (form.hasErrors()) {
 			logger.info("Form has an error");
-			return play.mvc.Controller.badRequest(index.render(
+			return badRequest(index.render(
 					"You Failed! Noob!", form));
 		}
 		models.Message message = form.get();
@@ -73,7 +73,7 @@ public class Application {
 		}
 		msgService.addMessage(message);
 		notifyRegistered(null);
-		return play.mvc.Controller.redirect(controllers.routes.Application
+		return redirect(controllers.routes.Application
 				.index());
 	}
 
@@ -81,12 +81,12 @@ public class Application {
 
 		List<models.Message> messages = msgService.getMessages();
 
-		return play.mvc.Controller.ok(Json.toJson(messages));
+		return ok(Json.toJson(messages));
 	}
 
 	public Result getRegisteredNumbers() {
 		List<models.Register> registered = msgService.getRegisteredNumbers();
-		return play.mvc.Controller.ok(Json.toJson(registered));
+		return ok(Json.toJson(registered));
 	}
 
 	public String getLastMessage() {
@@ -112,7 +112,7 @@ public class Application {
 
 		notifyRegistered(form.get("From"));
 
-		return play.mvc.Controller.ok();
+		return ok();
 	}
 
 	private void notifyRegistered(String ignore) {
