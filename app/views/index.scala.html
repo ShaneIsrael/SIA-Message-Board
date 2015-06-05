@@ -2,19 +2,16 @@
 @implicitFieldConstructor = @{ helper.FieldConstructor(twitterBootstrapInput.render) }
 
 @main("Anonymous Message Board") {
-
-
     <div class="container-fluid">
         <div class="page-header well well-sm">
         	<h1>Anonymous Message Board</h1>
     	</div>
     </div>
-
-    	<h3>@message</h3>
-    	<div id="hints">
-	    	<div class="alert alert-info" role="alert">Text !register to receive new replies to your mobile phone!<br>Text !unregister to stop receiving messages.</div>
-	    </div>
-        <ul id="messages"></ul>
+   	<h3>@message</h3>
+   	<div id="hints">
+    	<div class="alert alert-info" role="alert">Text !register to receive new replies to your mobile phone!<br>Text !unregister to stop receiving messages.</div>
+    </div>
+       <ul id="messages"></ul>
 	<div id="form">
   		@helper.form(action = routes.Application.addMessage(),'id -> "submitForm", 'class -> "well form-horizontal") {
             @helper.inputText(taskForm("contents"), '_label -> "Write a message...")
@@ -25,5 +22,4 @@
             </div>
         }
     </div>
-
 }

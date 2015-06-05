@@ -4,16 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import play.data.validation.Constraints;
-
 @Entity
 public class Message {
 
 	@Id
 	@GeneratedValue
-	public int id;
+	private int id;
 
-	@Constraints.Required(message = "A message is required!")
-	public String contents;
+	private String contents;
 
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String in) {
+		this.contents = in;
+	}
 }

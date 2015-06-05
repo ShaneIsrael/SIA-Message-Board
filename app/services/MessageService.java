@@ -6,11 +6,10 @@ import models.Register;
 import java.util.List;
 
 public interface MessageService {
-
-		public void addMessage(Message msg);
-		public boolean registerNumber(Register rgstr);
-		public boolean unregisterNumber(Register rgstr);
-		public List<Message> getMessages();
-		public List<Register> getRegisteredNumbers();
-		public Message getLastMessage();
+	void addMessage(Message msg);
+	boolean registerNumber(Register rgstr);
+	boolean unregisterNumber(Register rgstr);
+	List<Message> getMessages();
+	List<Register> getRegisteredNumbers();
+	Message getLastMessage();
 }

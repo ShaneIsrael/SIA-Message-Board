@@ -20,10 +20,6 @@
   </appender>
 
   <!-- Configure so that it outputs to both console and log file -->
-  <root level="DEBUG">
-    <appender-ref ref="FILE" />
-    <appender-ref ref="STDOUT" />
-  </root>
   <root level="INFO">
   	<appender-ref ref="FILE"/>
   	<appender-ref ref="STDOUT"/>

@@ -1,49 +1,47 @@
 package controllers;
 
-import models.Register;
+import models.Message;
 
 import services.MessageService;
 
-import play.Play;
-import play.data.DynamicForm;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.data.Form;
-import play.libs.Json;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import views.html.index;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.twilio.sdk.verbs.*;
+
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;
-import com.twilio.sdk.resource.instance.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import play.Play;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 @org.springframework.stereotype.Controller
 public class Application {
 
-	public static final String ACCOUNT_SID = Play.application().configuration()
+	private static final String ACCOUNT_SID = Play.application().configuration()
 			.getString("account.sid");
-	public static final String AUTH_TOKEN = Play.application().configuration()
+	private static final String AUTH_TOKEN = Play.application().configuration()
 			.getString("auth.token");
 
-	static {
-		System.setProperty("logback.configurationFile", "/app/conf/logger.xml");
-	}
+	private TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID,
+			AUTH_TOKEN);
 
-	static Logger Logger = LoggerFactory.getLogger(Application.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(Application.class);
 
 	@Autowired
 	private MessageService msgService;
@@ -57,27 +55,26 @@ public class Application {
 	}
 
 	public Result addMessage() {
-		Logger.info("Message added to board [Web-Interface]");
+		logger.info("Message added to board [Web-Interface]");
 		Form<models.Message> form = Form.form(models.Message.class)
 				.bindFromRequest();
 		if (form.hasErrors()) {
-			Logger.info("Form has an error");
+			logger.info("Form has an error");
 			return play.mvc.Controller.badRequest(index.render(
 					"You Failed! Noob!", form));
-		} else {
-			models.Message message = form.get();
-			message.contents = "["
-					+ new SimpleDateFormat("HH:mm").format(new Date()) + "] "
-					+ message.contents;
-
-			if (message.contents.length() > 255) {
-				message.contents = message.contents.substring(0, 255);
-			}
-			msgService.addMessage(message);
-			notifyRegistered(null);
-			return play.mvc.Controller.redirect(controllers.routes.Application
-					.index());
 		}
+		models.Message message = form.get();
+		message.setContents("["
+				+ new SimpleDateFormat("HH:mm").format(new Date()) + "] "
+				+ message.getContents());
+
+		if (message.getContents().length() > 255) {
+			message.setContents(message.getContents().substring(0, 255));
+		}
+		msgService.addMessage(message);
+		notifyRegistered(null);
+		return play.mvc.Controller.redirect(controllers.routes.Application
+				.index());
 	}
 
 	public Result getMessages() {
@@ -94,21 +91,21 @@ public class Application {
 
 	public String getLastMessage() {
 		models.Message message = msgService.getLastMessage();
-		return message.contents;
+		return message.getContents();
 	}
 
 	public Result twilioMessages() {
-		Logger.info("Message added to board [SMS-Interface]");
+		logger.info("Message added to board [SMS-Interface]");
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.data().size() != 0) {
-			String body = form.get("Body");
 			// If not a command, add the message ot the board.
 			if (!parseCommands(form)) {
+				String body = form.get("Body");
 				String contents = "["
 						+ new SimpleDateFormat("HH:mm").format(new Date())
 						+ "] " + body;
 				models.Message message = new models.Message();
-				message.contents = contents;
+				message.setContents(contents);
 				msgService.addMessage(message);
 			}
 		}
@@ -119,27 +116,26 @@ public class Application {
 	}
 
 	private void notifyRegistered(String ignore) {
-		Logger.info("Notifying Registered Users");
-		TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
-
+		logger.info("Notifying Registered Users");
 		Account account = client.getAccount();
-
 		String messageBody = getLastMessage();
 		List<models.Register> numbers = msgService.getRegisteredNumbers();
 		for (models.Register rgstr : numbers) {
 			// don't send the senders reply back to himself
-			if (null == ignore || !rgstr.phoneNumber.equals(ignore)) {
+			if (ignore == null || !rgstr.getPhoneNumber().equals(ignore)) {
 				try {
 					MessageFactory messageFactory = account.getMessageFactory();
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
-					params.add(new BasicNameValuePair("To", rgstr.phoneNumber));
+					List<NameValuePair> params = new ArrayList<>();
+					params.add(new BasicNameValuePair("To", rgstr.getPhoneNumber()));
 					params.add(new BasicNameValuePair("From", Play
 							.application().configuration()
 							.getString("sms.default")));
 					params.add(new BasicNameValuePair("Body", messageBody));
-					Message sms = messageFactory.create(params);
-				} catch (TwilioRestException tre) {
-					Logger.debug("TwilioRestException: Failed to send message to registered user!");
+					messageFactory.create(params);
+				} catch (TwilioRestException e) {
+					logger.debug(
+							"TwilioRestException: Failed to send message to registered user!",
+							e);
 				}
 			}
 		}
@@ -150,9 +146,9 @@ public class Application {
 		String body = in.get("Body");
 		String number = in.get("From");
 		if (body.toLowerCase().equals("!register")) {
-			Logger.info("Received !register Command");
+			logger.info("Received !register Command");
 			models.Register register = new models.Register();
-			register.phoneNumber = number;
+			register.setPhoneNumber(number);
 			String reply;
 			if (msgService.registerNumber(register)) {
 				reply = "Registered Successfully! New messages will be sent to your phone :)";
@@ -160,19 +156,19 @@ public class Application {
 				reply = "You are already registered!";
 			}
 
-			Logger.info("Sending register success reply!");
+			logger.info("Sending register success reply!");
 			sendReply(number, reply);
 
 			return true;
 		} else if (body.toLowerCase().equals("!unregister")) {
 			models.Register user = new models.Register();
-			user.phoneNumber = number;
+			user.setPhoneNumber(number);
 			if (msgService.unregisterNumber(user)) {
-				Logger.info("A user has unregistered.");
+				logger.info("A user has unregistered.");
 				sendReply(number,
 						"You have been unregistered, you will no longer receive messages.");
 			} else {
-				Logger.debug("A user could not be unregistered, are they in the database?");
+				logger.debug("A user could not be unregistered, are they in the database?");
 			}
 			return true;
 		}
@@ -181,9 +177,6 @@ public class Application {
 
 	private void sendReply(String number, String msg) {
 		try {
-			TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID,
-					AUTH_TOKEN);
-
 			Account account = client.getAccount();
 			MessageFactory messageFactory = account.getMessageFactory();
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -191,10 +184,9 @@ public class Application {
 			params.add(new BasicNameValuePair("From", Play.application()
 					.configuration().getString("sms.default")));
 			params.add(new BasicNameValuePair("Body", msg));
-			Message sms = messageFactory.create(params);
-		} catch (TwilioRestException tre) {
-			tre.printStackTrace();
-			Logger.debug("Failed to send message to user!");
+			messageFactory.create(params);
+		} catch (TwilioRestException e) {
+			logger.debug("Failed to send message to user!", e);
 		}
 	}
 

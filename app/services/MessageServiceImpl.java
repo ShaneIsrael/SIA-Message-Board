@@ -3,8 +3,10 @@ package services;
 import models.Message;
 import models.Register;
 
-import org.h2.command.dml.Query;
+import com.twilio.sdk.resource.factory.MessageFactory;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import play.Play;
 
@@ -12,15 +14,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 
 import java.util.List;
 
 @Service
-@org.springframework.transaction.annotation.Transactional
+@Transactional
 public class MessageServiceImpl implements MessageService {
 
 	@PersistenceContext
-	EntityManager em;
+	private EntityManager em;
 
 	public void addMessage(Message msg) {
 		em.persist(msg);
@@ -29,8 +32,8 @@ public class MessageServiceImpl implements MessageService {
 	public boolean registerNumber(Register rgstr) {
 		//we don't want to add duplicates
 		boolean exists = false;
-		for(Register registered : getRegisteredNumbers()) {
-			if(registered.phoneNumber.equals(rgstr.phoneNumber)) {
+		for (Register registered : getRegisteredNumbers()) {
+			if (registered.getPhoneNumber().equals(rgstr.getPhoneNumber())) {
 				exists = true;
 				break;
 			}
@@ -44,13 +47,9 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	public boolean unregisterNumber(Register rgstr) {
-		javax.persistence.Query query = em.createQuery("DELETE FROM Register WHERE phoneNumber=:number");
-		query.setParameter("number", rgstr.phoneNumber);
-		int result = query.executeUpdate();
-		if (result > 0) {
-			return true;
-		}
-		return false;
+		return (em.createQuery("DELETE FROM Register WHERE phoneNumber=:number")
+				.setParameter("number", rgstr.getPhoneNumber())
+				.executeUpdate() > 0);
 	}
 
 	public List<Message> getMessages() {
