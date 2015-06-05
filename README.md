@@ -24,7 +24,7 @@ The SMS Interactive Anonymous Message Board is a very basic chat client that all
 
 3. Now run the following commands
 
-        $ git clone [git-repo-url] SIAMB
+        $ git clone [https://github.com/ShaneIsrael-SOFI/SIA-Message-Board.git] SIAMB
         $ cd SIAMB
         
 4. open `conf/application.conf` in your favorite text editor and find these lines:
