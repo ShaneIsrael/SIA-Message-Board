@@ -15,7 +15,7 @@
 		       <ul id="messages"></ul>
 			<div id="form">
 		  		@helper.form(action = routes.Application.addMessage(),'id -> "submitForm", 'class -> "well form-horizontal") {
-		            @helper.inputText(taskForm("contents"), '_label -> "Write a message...")
+		            @helper.inputText(taskForm("contents"),'size -> 50, 'placeholder -> "Write a message...", '_label -> "")
 		            <div class="controls">
 		                <button type="submit" name="submitB" value="submitB" class="btn btn-default btn-lg" aria-label="Center Align">
 		                	<span class="glyphicon glyphicon-pencil" aria-hidden="true"> Submit</span>

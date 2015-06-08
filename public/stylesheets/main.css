@@ -14,10 +14,11 @@ ul {
 	padding-top: 5px;
 }
 
-h3, #hideAwayButton, #form, .hints, .well {
+h3, .hints, .well {
 	padding-left: 50px;
 }
 
 #hideAwayButton {
-	padding-top: 5px;
+	padding-top: 2px;
+	padding-left: 15px;
 }
