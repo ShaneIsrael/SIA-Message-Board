@@ -1,28 +1,22 @@
 package controllers;
 
 import models.Message;
-
 import services.MessageService;
-
 import views.html.index;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;
-
 import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,9 +68,7 @@ public class Application extends play.mvc.Controller {
     }
 
     public Result getMessages() {
-
         List<models.Message> messages = msgService.getMessages();
-
         return ok(Json.toJson(messages));
     }
 
@@ -93,7 +85,7 @@ public class Application extends play.mvc.Controller {
     public Result twilioMessages() {
         DynamicForm form = Form.form().bindFromRequest();
         if (form.data().size() != 0) {
-            // If not a command, add the message ot the board.
+            // If not a command, add the message to the board.
             if (!parseCommands(form)) {
                 String body = form.get("Body");
                 String contents = "["

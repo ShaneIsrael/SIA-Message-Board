@@ -1,25 +1,17 @@
 package services;
 
 import controllers.Application;
-
 import models.Message;
 import models.Register;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.twilio.sdk.resource.factory.MessageFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import play.Play;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.TypedQuery;
-import javax.persistence.Query;
-
 import java.util.List;
 
 @Service
@@ -86,5 +78,4 @@ public class MessageServiceImpl implements MessageService {
 		c.from(models.Register.class);
 		return em.createQuery(c).getResultList();
 	}
-
 }
