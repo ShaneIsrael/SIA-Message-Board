@@ -171,6 +171,19 @@ public class Application extends play.mvc.Controller {
     }
 
     private void sendReply(String number, String msg) {
+
+    	int begin = msg.indexOf("#");
+    	int end = msg.indexOf(":", msg.indexOf(" "));
+    	String hexColor = msg.substring(begin, end);
+
+    	String[] colors = {"red", "green", "blue", "cyan", "pink", "purple", "yellow", "gray", "magenta"};
+    	for (String color : colors) {
+    		if (msg.contains(color+":")) {
+    			msg.replace(color+":", "");
+    		}
+    	}
+    	msg.replace(hexColor, "");
+
         try {
             Account account = client.getAccount();
             MessageFactory messageFactory = account.getMessageFactory();
