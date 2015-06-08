@@ -162,7 +162,6 @@ public class Application extends play.mvc.Controller {
                 sendReply(number,
                         "You have been unregistered, you will no longer receive messages.");
             } else {
-                logger.info("A user could not be unregistered!");
                 logger.debug("A user could not be unregistered, are they in the database?");
             }
             return true;
