@@ -1,10 +1,14 @@
 package services;
 
+import controllers.Application;
+
 import models.Message;
 import models.Register;
 
-import com.twilio.sdk.resource.factory.MessageFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.twilio.sdk.resource.factory.MessageFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,9 @@ public class MessageServiceImpl implements MessageService {
 	@PersistenceContext
 	private EntityManager em;
 
+    private static final Logger logger = LoggerFactory
+            .getLogger(Application.class);
+
 	public void addMessage(Message msg) {
 		em.persist(msg);
 	}
@@ -34,6 +41,7 @@ public class MessageServiceImpl implements MessageService {
 		boolean exists = false;
 		for (Register registered : getRegisteredNumbers()) {
 			if (registered.getPhoneNumber().equals(rgstr.getPhoneNumber())) {
+				logger.info("Duplicate User Found: The database already contains a users phone number.");
 				exists = true;
 				break;
 			}

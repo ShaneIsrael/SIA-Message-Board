@@ -19,4 +19,8 @@ public class Register {
 	public void setPhoneNumber(String in) {
 		this.phoneNumber = in;
 	}
+
+	public int getId() {
+		return id;
+	}
 }

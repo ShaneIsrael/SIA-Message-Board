@@ -20,4 +20,8 @@ public class Message {
 	public void setContents(String in) {
 		this.contents = in;
 	}
+
+	public int getId() {
+		return id;
+	}
 }

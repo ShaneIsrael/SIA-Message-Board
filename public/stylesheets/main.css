@@ -1,3 +1,7 @@
+.screenSaver {
+  background: #000;
+  overflow: hidden;
+}
 
 ul {
 	padding-top: 4px;
@@ -10,10 +14,10 @@ ul {
 	padding-top: 5px;
 }
 
-h3 {
+h3, #hideAwayButton, #form, .hints, .well {
 	padding-left: 50px;
 }
 
-#hints, #form, .well {
-	padding-left: 50px;
+#hideAwayButton {
+	padding-top: 5px;
 }
