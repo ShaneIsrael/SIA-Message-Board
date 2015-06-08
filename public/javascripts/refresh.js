@@ -32,6 +32,7 @@ function getBoard() {
 					  break;
 				  }
 			  }
+			  // check for a hex command
 			  if (hasColor == false) {
 				  if (begin > -1 && end > -1) {
 					  var hexColor = message.contents.substring(begin, end);
@@ -47,7 +48,7 @@ function getBoard() {
 					  }
 				  }
 			  }
-
+			  // if there are no formatting commands, add the message as plain text.
 			  if (hasColor == false) {
 				  $("#messages").append($("<ul>").text(message.contents));
 			  }
