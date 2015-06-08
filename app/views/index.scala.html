@@ -8,23 +8,22 @@
 	        <div class="page-header well well-sm">
 	        	<h1>Anonymous Message Board</h1>
 	    	</div>
+		   	<h3>@message</h3>
+		   	<div class="hints">
+		    	<div class="alert alert-info" role="alert">Text <b>!register</b> to receive new replies to your mobile phone!<br>Text <b>!unregister</b> to stop receiving messages.</div>
+		    </div>
+		       <ul id="messages"></ul>
+			<div id="form">
+		  		@helper.form(action = routes.Application.addMessage(),'id -> "submitForm", 'class -> "well form-horizontal") {
+		            @helper.inputText(taskForm("contents"), '_label -> "Write a message...")
+		            <div class="controls">
+		                <button type="submit" name="submitB" value="submitB" class="btn btn-default btn-lg" aria-label="Center Align">
+		                	<span class="glyphicon glyphicon-pencil" aria-hidden="true"> Submit</span>
+		                </button>
+		            </div>
+		        }
+		    </div>
 	    </div>
-	   	<h3>@message</h3>
-	   	<div class="hints">
-	    	<div class="alert alert-info" role="alert">Text <b>!register</b> to receive new replies to your mobile phone!<br>Text <b>!unregister</b> to stop receiving messages.</div>
-	    </div>
-	       <ul id="messages"></ul>
-		<div id="form">
-	  		@helper.form(action = routes.Application.addMessage(),'id -> "submitForm", 'class -> "well form-horizontal") {
-	            @helper.inputText(taskForm("contents"), '_label -> "Write a message...")
-	            <div class="controls">
-	                <button type="submit" name="submitB" value="submitB" class="btn btn-default btn-lg" aria-label="Center Align">
-	                	<span class="glyphicon glyphicon-pencil" aria-hidden="true"> Submit</span>
-	                </button>
-	            </div>
-	        }
-	    </div>
-
 	}
 	<div id="hideAwayButton">
 		<button class="btn btn-default btn-sm"  name="hide" aria-label="Center Align" aria-expanded="false"
