@@ -20,31 +20,6 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 public class TestDatabaseConfig extends DataConfig {
 
-//    @Bean
-//    public EntityManagerFactory entityManagerFactory() {
-//        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-//        vendorAdapter.setShowSql(true);
-//        vendorAdapter.setGenerateDdl(true);
-//        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-//        entityManagerFactory.setPackagesToScan("models");
-//        entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
-//        entityManagerFactory.setDataSource(dataSource());
-//        entityManagerFactory.setJpaPropertyMap(new HashMap<String, String>(){{
-//            put("hibernate.hbm2ddl.auto", "update"); //validate
-//        }});
-//        entityManagerFactory.afterPropertiesSet();
-//        return entityManagerFactory.getObject();
-//    }
-//
-//    @Bean
-//    public PlatformTransactionManager transactionManager() {
-//        JpaTransactionManager transactionManager = new JpaTransactionManager(entityManagerFactory());
-//        transactionManager.setDataSource(dataSource());
-//        transactionManager.setJpaDialect(new HibernateJpaDialect());
-//        return transactionManager;
-//    }
-
-
 	@Bean
 	@Override
 	public DataSource dataSource() {
