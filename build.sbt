@@ -1,4 +1,4 @@
-name := "play2torial"
+name := "SIAMB"
 
 version := "1.0-SNAPSHOT"
 

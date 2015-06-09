@@ -1,16 +1,14 @@
 package services;
 
-import controllers.Application;
-
 import models.Message;
 import models.Register;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import play.Play;
 
 import java.util.List;
 
@@ -27,9 +25,10 @@ public class MessageServiceImpl implements MessageService {
 	private EntityManager em;
 
     private static final Logger logger = LoggerFactory
-            .getLogger(Application.class);
+            .getLogger(MessageServiceImpl.class);
 
-    private static final int MESSAGES_MAX = Play.application().configuration().getInt("messages.max");
+    @Value("${messages.max}")
+    private int MESSAGES_MAX;
 
 	public void addMessage(Message msg) {
 		em.persist(msg);
