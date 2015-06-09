@@ -1,18 +1,23 @@
 package services;
 
 import controllers.Application;
+
 import models.Message;
 import models.Register;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import play.Play;
+
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.TypedQuery;
-import java.util.List;
+import javax.persistence.criteria.CriteriaQuery;
 
 @Service
 @Transactional
@@ -24,6 +29,8 @@ public class MessageServiceImpl implements MessageService {
     private static final Logger logger = LoggerFactory
             .getLogger(Application.class);
 
+    private static final int MESSAGES_MAX = Play.application().configuration().getInt("messages.max");
+
 	public void addMessage(Message msg) {
 		em.persist(msg);
 	}
@@ -33,12 +40,11 @@ public class MessageServiceImpl implements MessageService {
 		boolean exists = false;
 		for (Register registered : getRegisteredNumbers()) {
 			if (registered.getPhoneNumber().equals(rgstr.getPhoneNumber())) {
-				logger.info("Duplicate User Found: The database already contains a users phone number.");
+				logger.info("Duplicate User {} Found: The database already contains a users phone number.", rgstr.getPhoneNumber());
 				exists = true;
 				break;
 			}
 		}
-
 		if (!exists) {
 			em.persist(rgstr);
 			return true;
@@ -56,8 +62,9 @@ public class MessageServiceImpl implements MessageService {
 		CriteriaQuery<Message> c = em.getCriteriaBuilder().createQuery(Message.class);
 		c.from(Message.class);
 		TypedQuery<Message> query = em.createQuery(c);
-		int maxResultsWanted = Play.application().configuration().getInt("messages.max");
+		int maxResultsWanted = MESSAGES_MAX;
 		int maxDBResults = query.getResultList().size();
+		//returns the last results message
 		if (maxDBResults > maxResultsWanted) {
 			query.setFirstResult(maxDBResults - maxResultsWanted);
 		}
@@ -73,9 +80,9 @@ public class MessageServiceImpl implements MessageService {
 		return query.getResultList().get(0);
 	}
 
-	public List<models.Register> getRegisteredNumbers() {
-		CriteriaQuery<models.Register> c = em.getCriteriaBuilder().createQuery(models.Register.class);
-		c.from(models.Register.class);
+	public List<Register> getRegisteredNumbers() {
+		CriteriaQuery<Register> c = em.getCriteriaBuilder().createQuery(Register.class);
+		c.from(Register.class);
 		return em.createQuery(c).getResultList();
 	}
 }

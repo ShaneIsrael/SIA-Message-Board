@@ -1,9 +1,11 @@
 @(message: String, taskForm: Form[Message])
 @implicitFieldConstructor = @{ helper.FieldConstructor(twitterBootstrapInput.render) }
-
 <div class="hideAway collapse in">
 
 	@main("Anonymous Message Board") {
+		<script src="@routes.Assets.at("javascripts/refresh.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.at("javascripts/MousePositionMonitor.js")" type="text/javascript"></script>
+		<script src="@routes.Assets.at("javascripts/screen-saver.js")" type="text/javascript"></script>
 	    <div class="container-fluid">
 	        <div class="page-header well well-sm">
 	        	<h1>Anonymous Message Board</h1>

@@ -1,9 +1,12 @@
+package services;
+
+import configs.AppConfigTest;
+import configs.DataConfigTest;
+
 import models.Message;
 import models.Register;
 
 import services.MessageService;
-
-import org.junit.runner.Computer;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +14,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import java.util.List;
-import static play.test.Helpers.*;
 
+import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.assertThat;
 
-@ContextConfiguration(classes={TestAppConfig.class, TestDatabaseConfig.class})
-public class BaseMessageTest extends AbstractTransactionalJUnit4SpringContextTests {
+@ContextConfiguration(classes={AppConfigTest.class, DataConfigTest.class})
+public class MessageServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
     private MessageService msgService;
@@ -41,7 +44,7 @@ public class BaseMessageTest extends AbstractTransactionalJUnit4SpringContextTes
         running(fakeApplication(), new Runnable() {
             public void run() {
               Register register = new Register();
-              register.setPhoneNumber("+4065550123");
+              register.setPhoneNumber("4065550123");
               msgService.registerNumber(register);
               assertThat(register.getId()).isNotNull();
               List<Register> users = msgService.getRegisteredNumbers();
@@ -69,7 +72,7 @@ public class BaseMessageTest extends AbstractTransactionalJUnit4SpringContextTes
         running(fakeApplication(), new Runnable() {
               public void run() {
             	Register register = new Register();
-                register.setPhoneNumber("+4065550123");
+                register.setPhoneNumber("4065550123");
                 msgService.registerNumber(register);
                 List<Register> users = msgService.getRegisteredNumbers();
                 assertThat(users.size()).isGreaterThan(0);
