@@ -6,6 +6,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Register {
+
 	@Id
 	@GeneratedValue
 	private int id;

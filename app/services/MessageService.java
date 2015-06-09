@@ -2,6 +2,7 @@ package services;
 
 import models.Message;
 import models.Register;
+
 import java.util.List;
 
 public interface MessageService {

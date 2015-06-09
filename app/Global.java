@@ -1,9 +1,11 @@
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.ApplicationContext;
-import play.GlobalSettings;
-import play.Application;
 import configs.AppConfig;
 import configs.DataConfig;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import play.Application;
+import play.GlobalSettings;
 
 public class Global extends GlobalSettings {
 

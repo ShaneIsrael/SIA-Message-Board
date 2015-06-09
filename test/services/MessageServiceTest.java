@@ -1,11 +1,11 @@
 package services;
-import models.Message;
-import models.Register;
-
-import services.MessageService;
+import static org.fest.assertions.Assertions.assertThat;
 
 import configs.AppConfigTest;
 import configs.DataConfigTest;
+
+import models.Message;
+import models.Register;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import java.util.List;
-
-import static play.test.Helpers.*;
-import static org.fest.assertions.Assertions.assertThat;
 
 @ContextConfiguration(classes={AppConfigTest.class, DataConfigTest.class})
 public class MessageServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
@@ -66,11 +63,16 @@ public class MessageServiceTest extends AbstractTransactionalJUnit4SpringContext
 
     @Test
     public void testGetLastMessage() {
+    	for (int i = 0; i < 50; i++) {
+    		Message message = new Message();
+    		message.setContents("This is a test message");
+    		msgService.addMessage(message);
+    	}
 		Message message = new Message();
-		message.setContents("This is a test message");
+		message.setContents("This is the last message added");
 		msgService.addMessage(message);
         Message lastMessage = msgService.getLastMessage();
         assertThat(lastMessage).isNotNull();
-        assertThat(lastMessage.getContents()).isEqualTo("This is a test message");
+        assertThat(lastMessage.getContents()).isEqualTo("This is the last message added");
     }
 }
