@@ -68,11 +68,12 @@ To enable SMS support you will need to create a Twilio account. For this you can
         #~~~~~~
         The default sms number should be in the form +9995553333
         #where 9's are the area code and so forth
-        account.sid=""
-        auth.token=""
-        sms.default.number=""
+        twilio.enabled=false
+        account.sid="YOUR_TWILIO_SID"
+        auth.token="YOUR_TWILIO_AUTH"
+        sms.default.number="YOUR_TWILIO_PHONE_NUMBER"
 
-3. On your Twilio account, add your Trial `account sid, auth token, and phone number` into empty quotes. Make sure you format the phone number as +9995553333. Save the file.
+3. On your Twilio account, add your Trial `account sid, auth token, and phone number` into empty quotes. Set `twilio.enabled="false"` to `twilio.enabled="true"`. Make sure you format the phone number as +9995553333. Save the file.
 
 
 4. Now go back to your Twilio account and select `DEV TOOLS`from the navbar. Select `TWIML APPS` from the sub-menu. Now create a new TwiML App by clicking the `Create TwiML App` button. Pause and go to step 4.
