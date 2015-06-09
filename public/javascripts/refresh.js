@@ -56,9 +56,11 @@ function getBoard() {
 		  }
 	});
 }
+
 function getPosition(str, m, i) {
-	   return str.split(m, i).join(m).length;
-	}
+	return str.split(m, i).join(m).length;
+}
+
 function submitHandler() {
 	// Attach a submit handler to the form
 	$( "#submitForm" ).submit(function( event ) {

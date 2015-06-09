@@ -29,26 +29,26 @@ import java.util.List;
 @org.springframework.stereotype.Controller
 public class Application extends play.mvc.Controller {
 
-	private static final String ACCOUNT_SID = Play.application()
-			.configuration().getString("account.sid");
-	private static final String AUTH_TOKEN = Play.application().configuration()
-			.getString("auth.token");
+	private final String SMS_DEFAULT_NUMBER = Play.application().configuration().getString("sms.default.number");
+	private final boolean TWILIO_ENABLED = Play.application().configuration().getBoolean("twilio.enabled");
+
+	private static final String ACCOUNT_SID = Play.application().configuration().getString("account.sid");
+	private static final String AUTH_TOKEN = Play.application().configuration().getString("auth.token");
 
 	private TwilioRestClient client;
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(Application.class);
-
-	private final String SMS_DEFAULT_NUMBER = Play.application().configuration().getString("sms.default.number");
+	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
 	@Autowired
 	private MessageService msgService;
 
+	public Application() {
+		if (TWILIO_ENABLED) {
+			client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
+		}
+	}
 	public Result index() {
 		String smsNumber = SMS_DEFAULT_NUMBER;
-		if (Play.application().configuration().getBoolean("twilio.enabled")) {
-			client = new TwilioRestClient(ACCOUNT_SID,AUTH_TOKEN);
-		}
+
 		return ok(index.render("Text " + smsNumber + " to add a message!",
 				play.data.Form.form(Message.class)));
 	}
@@ -64,8 +64,8 @@ public class Application extends play.mvc.Controller {
 				+ new SimpleDateFormat("HH:mm").format(new Date()) + "] "
 				+ message.getContents());
 
-		if (message.getContents().length() > 255) {
-			message.setContents(message.getContents().substring(0, 255));
+		if (message.getContents().length() > Message.MAX_MESSAGE_LENGTH) {
+			message.setContents(message.getContents().substring(0, Message.MAX_MESSAGE_LENGTH));
 		}
 		msgService.addMessage(message);
 		notifyRegistered(null);
@@ -106,24 +106,24 @@ public class Application extends play.mvc.Controller {
 	}
 
 	private void notifyRegistered(String ignore) {
-		logger.info("Notifying Registered Users");
-		Account account = client.getAccount();
-		String messageBody = getLastMessage();
-		List<Register> numbers = msgService.getRegisteredNumbers();
-		for (Register rgstr : numbers) {
-			// don't send the senders reply back to himself
-			if (ignore == null || !rgstr.getPhoneNumber().equals(ignore)) {
-				try {
-					MessageFactory messageFactory = account.getMessageFactory();
-					List<NameValuePair> params = new ArrayList<>();
-					params.add(new BasicNameValuePair("To", rgstr
-							.getPhoneNumber()));
-					params.add(new BasicNameValuePair("From",SMS_DEFAULT_NUMBER));
-					params.add(new BasicNameValuePair("Body", messageBody));
-					messageFactory.create(params);
-				} catch (TwilioRestException e) {
-					logger.debug(
-							"Failed to send message to registered user!", e);
+		if (TWILIO_ENABLED) {
+			logger.info("Notifying Registered Users");
+			Account account = client.getAccount();
+			String messageBody = getLastMessage();
+			List<Register> numbers = msgService.getRegisteredNumbers();
+			for (Register rgstr : numbers) {
+				// don't send the senders reply back to himself
+				if (ignore == null || !rgstr.getPhoneNumber().equals(ignore)) {
+					try {
+						MessageFactory messageFactory = account.getMessageFactory();
+						List<NameValuePair> params = new ArrayList<>();
+						params.add(new BasicNameValuePair("To", rgstr.getPhoneNumber()));
+						params.add(new BasicNameValuePair("From",SMS_DEFAULT_NUMBER));
+						params.add(new BasicNameValuePair("Body", messageBody));
+						messageFactory.create(params);
+					} catch (TwilioRestException e) {
+						logger.debug("Failed to send message to registered user!", e);
+					}
 				}
 			}
 		}
@@ -133,8 +133,7 @@ public class Application extends play.mvc.Controller {
 	private boolean parseCommands(DynamicForm in) {
 		String body = in.get("Body");
 		String number = in.get("From");
-		//if ("!register".equalsIgnoreCase(body)) {
-		if (body.toLowerCase().equals("!register")) {
+		if ("!register".equalsIgnoreCase(body)) {
 			logger.info("Command Received: !register");
 			Register register = new Register();
 			register.setPhoneNumber(number);
@@ -149,7 +148,7 @@ public class Application extends play.mvc.Controller {
 			sendReply(number, reply);
 
 			return true;
-		} else if (body.toLowerCase().equals("!unregister")) {
+		} else if ("!unregister".equalsIgnoreCase(body)) {
 			Register user = new Register();
 			user.setPhoneNumber(number);
 			if (msgService.unregisterNumber(user)) {
@@ -165,7 +164,7 @@ public class Application extends play.mvc.Controller {
 	}
 
 	private void sendReply(String number, String msg) {
-		String[] colors = { "red", "green", "blue", "cyan", "pink", "purple",
+		final String[] colors = { "red", "green", "blue", "cyan", "pink", "purple",
 				"yellow", "gray", "magenta" };
 
 		int begin = msg.indexOf("#");
@@ -175,12 +174,10 @@ public class Application extends play.mvc.Controller {
 				msg.replace(color + ":", "");
 			}
 		}
-		if(begin > -1 && end > -1) {
+		if (begin > -1 && end > -1) {
 			String hexColor = msg.substring(begin, end);
 			msg.replace(hexColor, "");
 		}
-
-
 		try {
 			Account account = client.getAccount();
 			MessageFactory messageFactory = account.getMessageFactory();
@@ -190,8 +187,7 @@ public class Application extends play.mvc.Controller {
 			params.add(new BasicNameValuePair("Body", msg));
 			messageFactory.create(params);
 		} catch (TwilioRestException e) {
-			logger.debug(
-					"TwilioRestException: Failed to send message to user!", e);
+			logger.debug("TwilioRestException: Failed to send message to user!", e);
 		}
 	}
 

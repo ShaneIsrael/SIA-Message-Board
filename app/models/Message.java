@@ -7,6 +7,8 @@ import javax.persistence.Id;
 @Entity
 public class Message {
 
+	public static final int MAX_MESSAGE_LENGTH = 255;
+
 	@Id
 	@GeneratedValue
 	private int id;
@@ -23,5 +25,9 @@ public class Message {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
