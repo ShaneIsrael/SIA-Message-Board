@@ -34,8 +34,7 @@ public class Application extends play.mvc.Controller {
 	private static final String AUTH_TOKEN = Play.application().configuration()
 			.getString("auth.token");
 
-	private TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID,
-			AUTH_TOKEN);
+	private TwilioRestClient client;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(Application.class);
@@ -47,6 +46,9 @@ public class Application extends play.mvc.Controller {
 
 	public Result index() {
 		String smsNumber = SMS_DEFAULT_NUMBER;
+		if (Play.application().configuration().getBoolean("twilio.enabled")) {
+			client = new TwilioRestClient(ACCOUNT_SID,AUTH_TOKEN);
+		}
 		return ok(index.render("Text " + smsNumber + " to add a message!",
 				play.data.Form.form(Message.class)));
 	}
