@@ -90,7 +90,8 @@ public class Application extends play.mvc.Controller {
 	public Result twilioMessages() {
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.data().size() != 0) {
-			// If not a command, add the message to the board.
+
+			//If the message is not a command, add it to the board.
 			if (!parseCommands(form)) {
 				String body = form.get("Body");
 				String contents = "["
@@ -153,8 +154,7 @@ public class Application extends play.mvc.Controller {
 			user.setPhoneNumber(number);
 			if (msgService.unregisterNumber(user)) {
 				logger.info("Command Received: !unregister");
-				sendReply(number,
-						"You have been unregistered, you will no longer receive messages.");
+				sendReply(number,"You have been unregistered, you will no longer receive messages.");
 			} else {
 				logger.warn("User {} could not be unregistered, are they in the database?", user.getPhoneNumber());
 			}
@@ -167,6 +167,11 @@ public class Application extends play.mvc.Controller {
 		final String[] colors = { "red", "green", "blue", "cyan", "pink", "purple",
 				"yellow", "gray", "magenta" };
 
+		/*
+		 * This little section removes any color formatting commands from the message
+		 * before sending it off to the mobile users. Such as #FFFFF: and green: would
+		 * be removed from the message
+		 */
 		int begin = msg.indexOf("#");
 		int end = msg.indexOf(":", msg.indexOf(" "));
 		for (String color : colors) {
